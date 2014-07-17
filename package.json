@@ -15,6 +15,9 @@
     "nodebots",
     "robotics"
   ],
+  "dependencies": {
+    "ffi": "1.2.x"
+  },
   "author": "Bryan Hughesi <bryan@theoreticalideations.com",
   "license": "MIT"
 }
