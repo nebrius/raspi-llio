@@ -1,7 +1,7 @@
-Raspi
-=====
+Raspberry Pi Low Level IO
+=========================
 
-The raspi-llio module exposes the [Wiring Pi](http://wiringpi.com/) C library to Node.js, which provides access to GPIO and
+The raspi-llio (Low Level Input/Output) module exposes the [Wiring Pi](http://wiringpi.com/) C library to Node.js, which provides access to GPIO and
 I2C capabilities, with SPI and UART capabilities coming soon. For more in depth information on how raspi-llio works, visit the Wiring Pi docs. All
 methods in this library map directly to a Wiring Pi method. Many of the methods are wrapped up in an object that must
 first be instantiated and handles file descriptors transparently.
