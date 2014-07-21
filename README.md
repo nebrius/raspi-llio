@@ -26,7 +26,7 @@ npm install raspi-llio
 
 ## Root Namespace
 
-The raspi-llio module consists of four namespaces, GPIO, I2C, SPI, and Serial, and a single method ```getBoardRev```:
+The raspi-llio module consists of four namespaces, GPIO, I2C, PWM, and a single method ```getBoardRev```:
 
 ### getBoardRev
 
@@ -55,15 +55,59 @@ Instantiates a new GPIO pin instance.
 #### Parameters:
 
 - pin (_number_)
-    - The pin number, as numbered on the P1 header. Note: if using mode ```PWM_OUTPUT```, set the pin to ```1``` (for PWM channel 1) not ```12```.
-- mode (```raspi.GPIO.INPUT, raspi.GPIO.OUTPUT, raspi.GPIO.PWM_OUTPUT```)
-    - The mode for the pin. Note tht ```PWM_OUTPUT``` is only valid for pin 12
+    - The pin number, as numbered on the P1 header
+- mode (```raspi.GPIO.INPUT, raspi.GPIO.OUTPUT```)
+    - The mode for the pin
 - pullUpDown (```raspi.GPIO.PUD_OFF, raspi.GPIO.PUD_DOWN, raspi.GPIO.PUD_UP```) Optional.
     - Enables a pull up or pull down resistor on the pin
 
+## GPIO Instances
+
+### value digitalRead()
+
+Reads the value on the pin and returns either ```raspi.GPIO.LOW``` or ```raspi.GPIO.HIGH```. Only valid when the pin mode
+is ```INPUT```.
+
+### digitalWrite(value)
+
+The digital write method takes one parameter, either ```raspi.GPIO.LOW``` or ```raspi.GPIO.HIGH``` and sets the pin value.
+Only valid when the pin mode is ```OUTPUT```
+
+## PWM
+
+Generating a PWM output works like GPIO; you first instantiate a PWM instance and then call ```pwmWrite```:
+
+```javascript
+var raspi = require('raspi-llio');
+
+var pwm = new raspi.GPIO(1, raspi.GPIO.PWM_OUTPUT);
+
+var value = 20;
+setInterval(function() {
+  if (value == 20) {
+    value = 110;
+  } else {
+    value = 20;
+  }
+  pwm.pwmWrite(value);
+}, 2000);
+```
+
+**Important**: If you are driving a servo, the value should be between about 40 and 90 for 90 degree servos, and 20 and 110 for 180
+degree servos. Make sure to test these values with your specific servo and make sure you aren't overdriving your servo,
+as this can also harm your Raspberry Pi. Also make sure that you have a good power supply because the 5V power
+on the Raspberry Pi is notoriously fickle. If you see that your Raspberry Pi is being reset when trying to drive a sero,
+you will need to either get a better power supply for your Raspberry Pi, or you will need to power the servo using an
+external source.
+
+### new _constructor_()
+
+Instantiates a new GPIO pin instance.
+
 ### setPwmMode(mode)
 
-Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. The default mode (raspi.GPIO.PWM_MODE_MS) works for most applications, so only modify this if you know what you are doing.
+Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. The default mode
+(raspi.GPIO.PWM_MODE_MS) works for most applications, so only modify this if you know that you need to.
 See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
 
@@ -81,46 +125,13 @@ for more information.
 Sets the PWM clock divisor. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
 
-## GPIO Instances
-
-### value digitalRead()
-
-Reads the value on the pin and returns either ```raspi.GPIO.LOW``` or ```raspi.GPIO.HIGH```. Only valid when the pin mode
-is ```INPUT```.
-
-### digitalWrite(value)
-
-The digital write method takes one parameter, either ```raspi.GPIO.LOW``` or ```raspi.GPIO.HIGH``` and sets the pin value.
-Only valid when the pin mode is ```OUTPUT```
+## PWM Instances
 
 ### pwmWrite(value)
 
 Sets the PWM duty cycle to ```value / 1000```, assuming the default clock divisor and range.  The value should be between
-0 and the max PWM value. The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1000. This method is
-only valid for pin 12.
+0 and the max PWM value. The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1000.
 
-Note: if you are using a servo, the value should be between about 40 and 90 for 90 degree servos, and 20 and 110 for 180
-degree servos. Make sure to test these values with your specific servo and make sure you aren't overdriving your servo,
-as this can also harm your Raspberry Pi. Also make sure that you have a good power supply because the 5V power supply
-on the Raspberry Pi is notoriously fickle.
-
-Servo exmaple:
-
-```javascript
-var raspi = require('raspi-llio');
-
-var pwm = new raspi.GPIO(1, raspi.GPIO.PWM_OUTPUT);
-
-var value = 20;
-setInterval(function() {
-  if (value == 20) {
-    value = 110;
-  } else {
-    value = 20;
-  }
-  pwm.pwmWrite(value);
-}, 2000);
-```
 
 ## I2C
 
