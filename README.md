@@ -55,7 +55,7 @@ Instantiates a new GPIO pin instance.
 #### Parameters:
 
 - pin (_number_)
-    - The pin number, as numbered on the P1 header
+    - The pin number, as numbered on the P1 header. Note: if using mode ```PWM_OUTPUT```, set the pin to ```1``` (for PWM channel 1) not ```12```.
 - mode (```raspi.GPIO.[INPUT, OUTPUT, PWM_OUTPUT, GPIO_CLOCK, SOFT_PWM_OUTPUT, SOFT_TONE_OUTPUT]```)
     - The mode for the pin. Note tht ```PWM_OUTPUT``` is only valid for pin 12 and ```GPIO_CLOCK``` is only valid for pin 7
 - pullUpDown (```raspi.GPIO.[PUD_OFF, PUD_DOWN, PUD_UP]```) Optional.
@@ -95,8 +95,31 @@ The digital write method takes one parameter, either ```raspi.GPIO.LOW``` or ```
 
 ### pwmWrite
 
-The pwm write method takes one parameter,a number, and returns nothing. The value should be between 0 and the max PWM value.
-The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1024.
+The pwm write method takes one parameter, a number, and returns nothing. The value should be between 0 and the max PWM value.
+The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1024. This method is only valid for pin 12.
+
+Note: if you are using a servo, the value should be between about 40 and 90 for 90 degree servos, and 20 and 110 for 180
+degree servos. Make sure to test these values with your specific servo and make sure you aren't overdriving your servo,
+as this can also harm your Rasperry Pi. Also make sure that you have a good power supply because the 5V power supply
+on the Raspberry Pi is notoriously fickle.
+
+Servo exmaple:
+
+```javascript
+var raspi = require('raspi-llio');
+
+var pwm = new raspi.GPIO(1, raspi.GPIO.PWM_OUTPUT);
+
+var value = 20;
+setInterval(function() {
+  if (value == 20) {
+    value = 110;
+  } else {
+    value = 20;
+  }
+  pwm.pwmWrite(value);
+}, 2000);
+```
 
 ## I2C
 

@@ -18,9 +18,6 @@
   "dependencies": {
     "ffi": "1.2.x"
   },
-  "scripts": {
-    "postinstall": "./scripts/wiringpi.js"
-  },
   "author": "Bryan Hughesi <bryan@theoreticalideations.com",
   "license": "MIT"
 }
