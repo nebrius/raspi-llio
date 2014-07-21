@@ -1,7 +1,7 @@
 {
-  "name": "raspi",
+  "name": "raspi-llio",
   "version": "0.1.0",
-  "description": "Provides Node.js bindings to the WiringPi library for controlling a Raspberry Pi",
+  "description": "Provides Node.js bindings to the WiringPi library for controlling a Raspberry Pi's I/O at a low level",
   "main": "lib/raspi.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
