@@ -75,21 +75,24 @@ Only valid when the pin mode is ```OUTPUT```
 
 ## PWM
 
-Generating a PWM output works like GPIO; you first instantiate a PWM instance and then call ```pwmWrite```:
+Generating a PWM output works like GPIO; you first instantiate a PWM instance and then call ```pwmWrite```. To control a servo:
 
 ```javascript
 var raspi = require('raspi-llio');
 
-var pwm = new raspi.GPIO(1, raspi.GPIO.PWM_OUTPUT);
+var pwm = new raspi.PWM();
+raspi.PWM.setMode(0);
+raspi.PWM.setClockDivisor(400);
+raspi.PWM.setRange(1000);
 
-var value = 20;
+var value = 40;
 setInterval(function() {
-  if (value == 20) {
-    value = 110;
+  if (value == 40) {
+    value = 90;
   } else {
-    value = 20;
+    value = 40;
   }
-  pwm.pwmWrite(value);
+  pwm.write(value);
 }, 2000);
 ```
 
@@ -106,9 +109,7 @@ Instantiates a new GPIO pin instance.
 
 ### setPwmMode(mode)
 
-Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. The default mode
-(raspi.GPIO.PWM_MODE_MS) works for most applications, so only modify this if you know that you need to.
-See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
+Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
 
 #### Parameters:
@@ -181,6 +182,8 @@ Reads some data from an 8-bit register in the I2C peripheral.
 ### readReg16
 
 Reads some data from a 16-bit register in the I2C peripheral.
+
+Note: you may also be interested in the [Raspi IO](https://gitlab.theoreticalideations.com/nebrius/raspi-io/tree/master) library, which provides a more abstract API that is compatible with [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
 License
 =======
