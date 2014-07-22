@@ -1,10 +1,10 @@
 Raspberry Pi Low Level IO
 =========================
 
-The raspi-llio (Low Level Input/Output) module exposes the [Wiring Pi](http://wiringpi.com/) C library to Node.js, which provides access to GPIO and
-I2C capabilities, with SPI and UART capabilities coming soon. For more in depth information on how raspi-llio works, visit the Wiring Pi docs. All
-methods in this library map directly to a Wiring Pi method. Many of the methods are wrapped up in an object that must
-first be instantiated and handles file descriptors transparently.
+The raspi-llio (Low Level Input/Output) module exposes the [Wiring Pi](http://wiringpi.com/) C library to Node.js, which
+provides access to GPIO, PWM, I2C, SPI, and UART capabilities. For more in depth information on how raspi-llio works,
+visit the Wiring Pi docs. All methods in this library map directly to a Wiring Pi method. Many of the methods are wrapped
+up in an object that must first be instantiated and handles file descriptors transparently.
 
 # Installation
 
@@ -107,7 +107,7 @@ external source.
 
 Instantiates a new GPIO pin instance.
 
-### setPwmMode(mode)
+### setMode(mode)
 
 Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
@@ -116,28 +116,26 @@ for more information.
 - mode (```raspi.GPIO.PWM_MODE_MS, raspi.GPIO.PWM_MODE_BAL```)
     - The PWM mode. See the datasheet for a description of the modes.
 
-### setPwmRange(range)
+### setRange(range)
 
 Sets the value of the PWM range register. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
 
-### setPwmClockDivisor(divisor)
+### setClockDivisor(divisor)
 
 Sets the PWM clock divisor. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
 
 ## PWM Instances
 
-### pwmWrite(value)
+### write(value)
 
 Sets the PWM duty cycle to ```value / 1000```, assuming the default clock divisor and range.  The value should be between
 0 and the max PWM value. The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1000.
 
-
 ## I2C
 
-Interfacing with I2C devices works similarly to working with GPIO devices. First instantiate an I2C object by feeding
-the constructor the address of the I2C peripheral. 
+Interfacing with I2C devices requires instantiating a new instance that represents an external device attached via I2C:
 
 ```javascript
 var raspi = require('raspi-llio');
@@ -153,37 +151,118 @@ Some I2C devices work by being read from/written to directly. In these cases, us
 Most devices are register based, however, so use the ```readRegX``` and ```writeRegX``` methods. Consult the data sheets
 for the I2C device to determine which method is appropriate.
 
+**Note:** If you encounter a "No such file or directory" error when trying to use I2C peripherals, you may need to load the I2C driver from the command line with:
+
+```
+gpio load i2c
+```
+
 ### new _constructor_(address)
 
 Instantiates a new I2C peripheral instance that corresponds to the device at the given address.
 
 ## I2C Instances
 
-### read
+### data read()
 
 Reads some data from the I2C peripheral. Blocks if there is nothing to read until something can be read.
 
-### write
+### write(data)
 
 Writes some data to the I2C peripheral.
 
-### writeReg8
+### writeReg8(register, data)
 
 Writes some data to an 8-bit register in the I2C peripheral.
 
-### writeReg16
+### writeReg16(register, data)
 
 Writes some data to a 16-bit register in the I2C peripheral.
 
-### readReg8
+### data readReg8(register)
 
 Reads some data from an 8-bit register in the I2C peripheral.
 
-### readReg16
+### data readReg16(register)
 
 Reads some data from a 16-bit register in the I2C peripheral.
 
-Note: you may also be interested in the [Raspi IO](https://gitlab.theoreticalideations.com/nebrius/raspi-io/tree/master) library, which provides a more abstract API that is compatible with [Johnny-Five](https://github.com/rwaldron/johnny-five).
+## SPI
+
+Interfacing with an SPI device requires instantiating an SPI instance representing an SPI channel at a certain speed:
+
+```javascript
+var raspi = require('raspi-llio');
+
+var spi = new raspi.SPI(0, 1000000); // Creates an SPI on channel 0 running at 1Mbps
+spi.readWrite('Hello World');
+```
+
+**Warning**: the SPI module is untested
+
+### new _constructor_(channel, speed)
+
+Instantiates a new SPI instance with the given channel, which must be 0 or 1, at the specified speed in bps, which must be
+between 500000 and 32000000.
+
+## SPI Instances
+
+### data_out readWrite(data_in)
+
+Simultaneously reads and writes data to/from the SPI device.
+
+**Note:** If you encounter a "No such file or directory" error when trying to use SPI peripherals, you may need to load the SPI driver from the command line with:
+
+```
+gpio load spi
+```
+
+## UART
+
+Interfacing with a UART-compatible device (i.e. TTY devices) requires instantiating a UART instance for a device at a given BAUD rate.
+
+```javascript
+var raspi = require('raspi-llio');
+
+var uart = new raspi.UART('/dev/ttyAMA0', 115200);
+setInterval(function() {
+  var data = '';
+  while (uart.dataAvailable()) {
+    data += uart.getCharacter();
+  };
+  if (data) {
+    console.log(data);
+  }
+}, 500);
+```
+
+**Warning**: the UART module is untested
+
+### new _constructor_(device, baud)
+
+Instantiates a UART instance for the given device (e.g. ```/dev/tty0```) at a given BAUD rate, which must be a positive integer.
+
+## UART Instances
+
+### write(data)
+
+Writes the given string to the UART device.
+
+### amount dataAvailable()
+
+Returns the number of characters available for reading.
+
+### char getCharacter()
+
+Gets a single character from the device. Blocks for up to 10 seconds before throwing an error if no data is available.
+
+### flush()
+
+Flushes the serial device.
+
+## Further Reading
+
+You may also be interested in the [Raspi IO](https://gitlab.theoreticalideations.com/nebrius/raspi-io/tree/master) library, which provides a more abstract API that is compatible with [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
 License
 =======
