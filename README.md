@@ -105,16 +105,12 @@ external source.
 
 ### new _constructor_()
 
-Instantiates a new GPIO pin instance.
+Instantiates a new PWM channel instance.
 
 ### setMode(mode)
 
-Sets the PWM mode, must be one of ```raspi.GPIO.PWM_MODE_MS``` or ```raspi.GPIO.PWM_MODE_BAL```. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
+Sets the PWM mode, must be one of ```raspi.PWM.PWM_MODE_MS``` or ```raspi.PWM.PWM_MODE_BAL```. See the [BCM2835 ARM Peripherals datasheet](http://www.raspberrypi.org/wp-content/uploads/2012/02/BCM2835-ARM-Peripherals.pdf)
 for more information.
-
-#### Parameters:
-- mode (```raspi.GPIO.PWM_MODE_MS, raspi.GPIO.PWM_MODE_BAL```)
-    - The PWM mode. See the datasheet for a description of the modes.
 
 ### setRange(range)
 
@@ -131,7 +127,7 @@ for more information.
 ### write(value)
 
 Sets the PWM duty cycle to ```value / 1000```, assuming the default clock divisor and range.  The value should be between
-0 and the max PWM value. The max PWM value is set by ```raspi.GPIO.setPwmRange()``` and defaults to 1000.
+0 and the max PWM value. The max PWM value is set by ```raspi.PWM.setPwmRange()``` and defaults to 1024.
 
 ## I2C
 
