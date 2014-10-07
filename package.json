@@ -1,6 +1,6 @@
 {
   "name": "raspi-llio",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Provides Node.js bindings to the WiringPi library for controlling a Raspberry Pi's I/O",
   "main": "lib/raspi.js",
   "scripts": {
@@ -8,9 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.theoreticalideations.com:nebrius/raspi-llio.git"
+    "url": "https://github.com/bryan-m-hughes/raspi-llio.git"
   },
-  "homepage": "https://gitlab.theoreticalideations.com/nebrius/raspi-llio/tree/master",
+  "homepage": "https://github.com/bryan-m-hughes/raspi-llio",
   "bugs": {
     "url": "https://github.com/bryan-m-hughes/raspi-llio/issues"
   },
