@@ -1,6 +1,6 @@
 {
   "name": "raspi-llio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Provides Node.js bindings to the WiringPi library for controlling a Raspberry Pi's I/O",
   "main": "lib/raspi.js",
   "scripts": {
