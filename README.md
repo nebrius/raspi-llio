@@ -258,7 +258,7 @@ Flushes the serial device.
 
 ## Further Reading
 
-You may also be interested in the [Raspi IO](https://gitlab.theoreticalideations.com/nebrius/raspi-io/tree/master) library, which provides a more abstract API that is compatible with [Johnny-Five](https://github.com/rwaldron/johnny-five).
+You may also be interested in the [Raspi IO](https://github.com/bryan-m-hughes/raspi-io) library, which provides a more abstract API that is compatible with [Johnny-Five](https://github.com/rwaldron/johnny-five).
 
 License
 =======
