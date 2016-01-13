@@ -1,6 +1,8 @@
 Raspberry Pi Low Level IO
 =========================
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 **WARNING** This module has been _deprecated_ in favor of [Raspi.js](https://github.com/nebrius/raspi). Raspi.js uses a more advanced mechanism for managing peripherals, and is considerably more performant. Bugs will not be fixed in this module.
 
 The raspi-llio (Low Level Input/Output) module exposes the [Wiring Pi](http://wiringpi.com/) C library to Node.js, which
